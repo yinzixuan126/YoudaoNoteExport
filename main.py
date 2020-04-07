@@ -65,10 +65,14 @@ class YoudaoNoteSession(requests.Session):
         with open('%s/%s.xml' % (saveDir, id), 'w') as fp:
             fp.write(response.content)
 
-    def getNoteDocx(self, id, saveDir):
+
+    def getNoteDocx(self, id, name, saveDir):
         url = 'https://note.youdao.com/ydoc/api/personal/doc?method=download-docx&fileId=%s&cstk=%s&keyfrom=web' % (id, self.cstk)
         response = self.get(url)
-        with open('%s/%s.docx' % (saveDir, id), 'w') as fp:
+        item = name.split('.')
+        name = item[0]
+        print 'name is: ', name
+        with open('%s/%s.docx' % (saveDir, name), 'w') as fp:
             fp.write(response.content)
 
     def getFileRecursively(self, id, saveDir, doc_type):
@@ -108,7 +112,7 @@ class YoudaoNoteSession(requests.Session):
                     if doc_type == 'xml':
                         self.getNote(id, saveDir)
                     else: # docx
-                        self.getNoteDocx(id, saveDir)
+                        self.getNoteDocx(id, name, saveDir)
                 count = count + 1
                 lastId = id
 
